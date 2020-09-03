@@ -4,7 +4,9 @@
 const express = require('express');
 const app = express();
 
-// TODO: require and use "multer"...
+// Import and use multer
+const multer = require('multer');
+const upload = multer({ storage: multer.memoryStorage() });
 
 // Import and enable CORS
 const cors = require('cors');
@@ -18,6 +20,12 @@ app.get('/', (req, res) => res.sendFile(process.cwd() + '/views/index.html'));
 
 // Display a temporary message at the GET /api/hello route
 app.get('/hello', (req, res) => res.json({ greetings: 'Hello, API' }));
+
+app.post('/api/fileanalyse', upload.single('upfile'), (req, res) => res.json({
+    name: req.file.originalname,
+    type: req.file.mimetype,
+    size: req.file.size
+}));
 
 // Create a listener to handle requests
 const listener = app.listen(process.env.PORT || 3000, () => console.log('Node.js listening on port ' + listener.address().port));
